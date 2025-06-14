@@ -11,6 +11,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('accounts/', include('django.contrib.auth.urls')),  # Authentication URLs
-    path('', include('shop.urls')),  # Shop URLs at root
+    path('accounts/', include('django.contrib.auth.urls')), 
+    path('', include('shop.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

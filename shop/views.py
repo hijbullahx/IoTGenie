@@ -1,4 +1,4 @@
-from rest_framework import viewsets, permissions, status, serializers  # Add serializers
+from rest_framework import viewsets, permissions, status, serializers  
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404, render, redirect
@@ -13,6 +13,12 @@ from django.views.generic.edit import CreateView
 from django.db.models import Q
 from django.http import JsonResponse
 from .models import Product
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.forms import UserChangeForm, PasswordChangeForm
+from django.contrib.auth import update_session_auth_hash
+from .forms import ReviewForm, UserProfileForm
+from rest_framework import viewsets
+
 
 # API Views
 class ProductViewSet(viewsets.ModelViewSet):
@@ -99,15 +105,12 @@ def product_detail(request, product_id):
 def add_to_cart(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     cart, created = Cart.objects.get_or_create(user=request.user)
-    quantity = int(request.POST.get('quantity', 1))
-    cart_item, created = CartItem.objects.get_or_create(
-        cart=cart, product=product, defaults={'quantity': quantity}
-    )
-    if not created:
-        cart_item.quantity += quantity
+    cart_item, item_created = CartItem.objects.get_or_create(cart=cart, product=product)
+    if not item_created:
+        cart_item.quantity += int(request.POST.get('quantity', 1))
         cart_item.save()
-    messages.success(request, 'Item added to cart!')
-    return redirect('product_list')
+    messages.success(request, f"{product.name} added to cart!")
+    return redirect('cart_detail')
 
 @login_required
 def remove_from_cart(request, item_id):
@@ -118,9 +121,17 @@ def remove_from_cart(request, item_id):
 
 @login_required
 def cart_detail(request):
-    cart = get_object_or_404(Cart, user=request.user)
-    total_amount = sum(item.product.price * item.quantity for item in cart.items.all())
+    cart, created = Cart.objects.get_or_create(user=request.user)
+    total_amount = sum(item.total_price for item in cart.items.all())
     return render(request, 'cart_detail.html', {'cart': cart, 'total_amount': total_amount})
+
+@login_required
+def remove_from_cart(request, item_id):
+    cart_item = get_object_or_404(CartItem, id=item_id, cart__user=request.user)
+    product_name = cart_item.product.name
+    cart_item.delete()
+    messages.success(request, f"{product_name} removed from cart!")
+    return redirect('cart_detail')
 
 @login_required
 def place_order(request):
@@ -150,6 +161,31 @@ def add_review(request, product_id):
         messages.success(request, 'Review submitted!')
     return redirect('product_detail', product_id=product.id)
 
+@login_required
+def profile(request):
+    return render(request, 'profile.html', {'user': request.user})
+
+@login_required
+def edit_profile(request):
+    if request.method == 'POST':
+        user_form = UserProfileForm(request.POST, instance=request.user)
+        password_form = PasswordChangeForm(request.user, request.POST)
+        if user_form.is_valid() and password_form.is_valid():
+            user_form.save()
+            if password_form.cleaned_data.get('new_password1'):
+                password_form.save()
+                update_session_auth_hash(request, request.user)
+            messages.success(request, 'Profile updated successfully!')
+            return redirect('profile')
+        else:
+            messages.error(request, 'Please correct the errors below.')
+    else:
+        user_form = UserProfileForm(instance=request.user)
+        password_form = PasswordChangeForm(user=request.user)
+    return render(request, 'edit_profile.html', {
+        'user_form': user_form,
+        'password_form': password_form
+    })
 
 class RegisterView(CreateView):
     form_class = UserCreationForm
