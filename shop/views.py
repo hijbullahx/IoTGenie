@@ -10,6 +10,9 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
 from django.urls import reverse_lazy
 from django.views.generic.edit import CreateView
+from django.db.models import Q
+from django.http import JsonResponse
+from .models import Product
 
 # API Views
 class ProductViewSet(viewsets.ModelViewSet):
@@ -69,7 +72,23 @@ class OrderViewSet(viewsets.ModelViewSet):
 # Template Views
 def product_list(request):
     products = Product.objects.all()
-    return render(request, 'product_list.html', {'products': products})
+    search_query = request.GET.get('search', '')
+    category_filter = request.GET.get('category', '')
+
+    if search_query:
+        products = products.filter(
+            Q(name__icontains=search_query) | Q(description__icontains=search_query)
+        )
+    if category_filter:
+        products = products.filter(category=category_filter)
+
+    categories = Product.objects.values_list('category', flat=True).distinct()
+    return render(request, 'product_list.html', {
+        'products': products,
+        'categories': categories,
+        'search_query': search_query,
+        'category_filter': category_filter
+    })
 
 @login_required
 def product_detail(request, product_id):
@@ -130,6 +149,8 @@ def add_review(request, product_id):
         Review.objects.create(user=request.user, product=product, rating=rating, comment=comment)
         messages.success(request, 'Review submitted!')
     return redirect('product_detail', product_id=product.id)
+
+
 class RegisterView(CreateView):
     form_class = UserCreationForm
     template_name = 'registration/register.html'
@@ -140,3 +161,12 @@ class RegisterView(CreateView):
         login(self.request, user)
         messages.success(self.request, 'Registration successful!')
         return super().form_valid(form)
+    
+def product_search_suggestions(request):
+    query = request.GET.get('q', '')
+    if query:
+        products = Product.objects.filter(name__icontains=query).values('id', 'name')[:5]
+        suggestions = [{'id': p['id'], 'name': p['name']} for p in products]
+        return JsonResponse(suggestions, safe=False)
+    return JsonResponse([], safe=False)
+    

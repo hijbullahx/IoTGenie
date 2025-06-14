@@ -2,6 +2,26 @@
 {% block title %}Products{% endblock %}
 {% block content %}
 <h1 class="my-4">IoT Products</h1>
+<form method="get" class="mb-4" id="search-form">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="input-group">
+                <input type="text" name="search" id="search-input" class="form-control" placeholder="Search products..." value="{{ search_query }}" autocomplete="off">
+                <button type="submit" class="btn btn-primary">Search</button>
+                <div class="dropdown-menu" id="suggestions" style="width: 100%;"></div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <select name="category" class="form-select" onchange="this.form.submit()">
+                <option value="">All Categories</option>
+                {% for category in categories %}
+                <option value="{{ category }}" {% if category == category_filter %}selected{% endif %}>{{ category }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+</form>
+<p>Debug: {{ products|length }} products found</p>
 <div class="row">
     {% for product in products %}
     <div class="col-md-4 mb-4">
@@ -22,4 +42,39 @@
     <p>No products available.</p>
     {% endfor %}
 </div>
+
+<script>
+    const searchInput = document.getElementById('search-input');
+    const suggestionsDropdown = document.getElementById('suggestions');
+
+    searchInput.addEventListener('input', async function () {
+        const query = this.value.trim();
+        if (query.length < 2) {
+            suggestionsDropdown.innerHTML = '';
+            suggestionsDropdown.classList.remove('show');
+            return;
+        }
+
+        const response = await fetch(`/api/suggestions/?q=${encodeURIComponent(query)}`);
+        const suggestions = await response.json();
+
+        if (suggestions.length === 0) {
+            suggestionsDropdown.innerHTML = '<div class="dropdown-item">No results found</div>';
+            suggestionsDropdown.classList.add('show');
+            return;
+        }
+
+        suggestionsDropdown.innerHTML = suggestions.map(item =>
+            `<a class="dropdown-item" href="/products/${item.id}/">${item.name}</a>`
+        ).join('');
+        suggestionsDropdown.classList.add('show');
+    });
+
+    // Hide suggestions when clicking outside
+    document.addEventListener('click', function (e) {
+        if (!searchInput.contains(e.target) && !suggestionsDropdown.contains(e.target)) {
+            suggestionsDropdown.classList.remove('show');
+        }
+    });
+</script>
 {% endblock %}
