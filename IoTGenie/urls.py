@@ -9,7 +9,8 @@ from rest_framework_simplejwt.views import (
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('shop.urls')),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('accounts/', include('django.contrib.auth.urls')),  # Authentication URLs
+    path('', include('shop.urls')),  # Shop URLs at root
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

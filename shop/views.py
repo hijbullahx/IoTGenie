@@ -1,10 +1,17 @@
-from rest_framework import viewsets, permissions, status
+from rest_framework import viewsets, permissions, status, serializers  # Add serializers
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render, redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from .models import Product, Cart, CartItem, Order, Review
 from .serializers import ProductSerializer, CartSerializer, CartItemSerializer, OrderSerializer, ReviewSerializer
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import login
+from django.urls import reverse_lazy
+from django.views.generic.edit import CreateView
 
+# API Views
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
@@ -19,7 +26,6 @@ class ReviewViewSet(viewsets.ModelViewSet):
         return Review.objects.filter(user=self.request.user)
 
     def perform_create(self, serializer):
-        # Ensure only users who purchased the product can review
         product_id = self.request.data.get('product_id')
         product = get_object_or_404(Product, id=product_id)
         if not Order.objects.filter(user=self.request.user, status='completed').exists():
@@ -58,4 +64,79 @@ class OrderViewSet(viewsets.ModelViewSet):
         cart = get_object_or_404(Cart, user=self.request.user)
         total_amount = sum(item.product.price * item.quantity for item in cart.items.all())
         serializer.save(user=self.request.user, total_amount=total_amount)
-        cart.items.all().delete()  # Clear cart after order
+        cart.items.all().delete()
+
+# Template Views
+def product_list(request):
+    products = Product.objects.all()
+    return render(request, 'product_list.html', {'products': products})
+
+@login_required
+def product_detail(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    return render(request, 'product_detail.html', {'product': product})
+
+@login_required
+def add_to_cart(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    cart, created = Cart.objects.get_or_create(user=request.user)
+    quantity = int(request.POST.get('quantity', 1))
+    cart_item, created = CartItem.objects.get_or_create(
+        cart=cart, product=product, defaults={'quantity': quantity}
+    )
+    if not created:
+        cart_item.quantity += quantity
+        cart_item.save()
+    messages.success(request, 'Item added to cart!')
+    return redirect('product_list')
+
+@login_required
+def remove_from_cart(request, item_id):
+    cart_item = get_object_or_404(CartItem, id=item_id, cart__user=request.user)
+    cart_item.delete()
+    messages.success(request, 'Item removed from cart!')
+    return redirect('cart_detail')
+
+@login_required
+def cart_detail(request):
+    cart = get_object_or_404(Cart, user=request.user)
+    total_amount = sum(item.product.price * item.quantity for item in cart.items.all())
+    return render(request, 'cart_detail.html', {'cart': cart, 'total_amount': total_amount})
+
+@login_required
+def place_order(request):
+    cart = get_object_or_404(Cart, user=request.user)
+    total_amount = sum(item.product.price * item.quantity for item in cart.items.all())
+    if total_amount > 0:
+        Order.objects.create(user=request.user, total_amount=total_amount, status='completed')
+        cart.items.all().delete()
+        messages.success(request, 'Order placed successfully!')
+    return redirect('order_list')
+
+@login_required
+def order_list(request):
+    orders = Order.objects.filter(user=request.user)
+    return render(request, 'order_list.html', {'orders': orders})
+
+@login_required
+def add_review(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    if not Order.objects.filter(user=request.user, status='completed').exists():
+        messages.error(request, 'You must purchase a product to review it.')
+        return redirect('product_detail', product_id=product.id)
+    if request.method == 'POST':
+        rating = int(request.POST.get('rating'))
+        comment = request.POST.get('comment', '')
+        Review.objects.create(user=request.user, product=product, rating=rating, comment=comment)
+        messages.success(request, 'Review submitted!')
+    return redirect('product_detail', product_id=product.id)
+class RegisterView(CreateView):
+    form_class = UserCreationForm
+    template_name = 'registration/register.html'
+    success_url = reverse_lazy('product_list')
+
+    def form_valid(self, form):
+        user = form.save()
+        login(self.request, user)
+        messages.success(self.request, 'Registration successful!')
+        return super().form_valid(form)

@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block title %}Cart{% endblock %}
+{% block content %}
+<h1 class="my-4">Your Cart</h1>
+{% if cart %}
+<table class="table">
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Image</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Total</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in cart.items.all %}
+        <tr>
+            <td>{{ item.product.name }}</td>
+            <td>
+                {% if item.product.image %}
+                <img src="{{ item.product.image.url }}" class="product-img" style="max-width: 50px;" alt="{{ item.product.name }}">
+                {% endif %}
+            </td>
+            <td>{{ item.quantity }}</td>
+            <td>BDT {{ item.product.price }}</td>
+            <td>BDT {{ item.total_price }}</td>
+            <td>
+                <form method="post" action="{% url 'remove_from_cart' item.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<p><strong>Total Amount:</strong> BDT {{ total_amount }}</p>
+<a href="{% url 'place_order' %}" class="btn btn-primary">Place Order</a>
+{% else %}
+<p>Your cart is empty.</p>
+{% endif %}
+{% endblock %}
