@@ -9,13 +9,31 @@
     <link href="{% static 'css/sketchy-bootstrap.min.css' %}" rel="stylesheet">
     <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
     <style>
-        body { padding-top: 70px; }
+        body {
+            padding-top: 70px;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
         .product-img { max-height: 200px; object-fit: cover; }
+        footer {
+            margin-top: auto;
+            padding: 1rem 0;
+            background-color: #f8f9fa;
+            text-align: right;
+        }
+        .container { flex: 1 0 auto; }
     </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
         <div class="container">
+            <button class="btn btn-link text-light me-2" data-bs-toggle="modal" data-bs-target="#aboutModal" title="About Developer">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16">
+                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                    <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
+                </svg>
+            </button>
             <a class="navbar-brand" href="{% url 'product_list' %}">IoTGenie</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -55,9 +73,53 @@
             </div>
         </div>
     </nav>
+
+    <!-- About Me Modal -->
+    <div class="modal fade" id="aboutModal" tabindex="-1" aria-labelledby="aboutModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="aboutModalLabel">About the Developer</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h4>👨‍💻 About Me</h4>
+                    <p>Hi, I’m Hijbullah, a passionate tech enthusiast from Bangladesh with a deep curiosity for IoT, Artificial Intelligence, Machine Learning, and Robotics. I’m currently pursuing my Bachelor’s in Computer Science and Engineering and actively involved in research, innovation, and real-world tech projects.</p>
+                    <p>Over the past few years, I’ve dedicated myself to exploring how intelligent systems can solve local and global problems. My journey has led me to create <strong>IoTGenie</strong> — a platform that merges cutting-edge IoT technology with user-friendly experiences to help individuals and businesses thrive in a connected world.</p>
+                    <h5>🛠️ What I Do:</h5>
+                    <ul>
+                        <li>Build smart IoT solutions that improve everyday life</li>
+                        <li>Conduct research in ML, AI, power distribution, and security in IoT systems</li>
+                        <li>Develop web and mobile interfaces to connect users with intelligent tech</li>
+                        <li>Collaborate with like-minded innovators to bring big ideas to life</li>
+                    </ul>
+                    <h5>🎓 A Bit More About Me:</h5>
+                    <ul>
+                        <li>Campus Ambassador of ICTOB, IIEC member, and former Rover Scout</li>
+                        <li>Winner of Grameenphone Academy IoT Competition (2nd Place)</li>
+                        <li>Contributor to multiple ongoing research projects including power optimization, IoT botnet detection, and adversarial machine learning</li>
+                    </ul>
+                    <p>I believe that technology should not only be smart — it should be kind, inclusive, and impactful.</p>
+                    <h5>🌱 My Vision:</h5>
+                    <p>To make Bangladesh a smarter, more connected nation through scalable IoT solutions backed by AI. My dream is to build systems that recognize us, understand us, and help us — much like a digital companion.</p>
+                    <p>Thank you for visiting IoTGenie. Let’s innovate, together.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="container">
         {% block content %}
         {% endblock %}
     </div>
+
+    <footer>
+        <div class="container">
+            <p class="mb-0 text-end">&copy; 2025 Md. Taher Bin Omar Hijbullah</p>
+        </div>
+    </footer>
 </body>
 </html>
