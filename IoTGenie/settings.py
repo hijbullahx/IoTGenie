@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -81,6 +82,7 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 SESSION_COOKIE_AGE = 1209600  
 SESSION_COOKIE_SECURE = False 
 SESSION_COOKIE_HTTPONLY = True
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -99,3 +101,10 @@ LOGGING = {
         },
     },
 }
+DATABASES = {
+    'default': dj_database_url.config(default=os.environ.get('postgresql://neondb_owner:npg_Cjda1bVpJ6fQ@ep-royal-voice-a8soub3f-pooler.eastus2.azure.neon.tech/neondb?sslmode=require'))
+}
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.vercel.app']
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [BASE_DIR / 'static']
+STATIC_ROOT = BASE_DIR / 'staticfiles'
