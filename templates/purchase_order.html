@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Purchase Order{% endblock %}
+{% block content %}
+<h1 class="my-4">Purchase Order</h1>
+{% if messages %}
+<div class="alert alert-info">
+    {% for message in messages %}
+    {{ message }}
+    {% endfor %}
+</div>
+{% endif %}
+<h3>Order Details</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in cart.items.all %}
+        <tr>
+            <td>{{ item.product.name }}</td>
+            <td>BDT {{ item.product.price }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>BDT {{ item.total_price }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<h4>Total Amount: BDT {{ total_amount }}</h4>
+
+<h3>Select Payment Method</h3>
+<div class="alert alert-warning">
+    <p><strong>Note:</strong> Payment gateway is under development. Full functionality will be available upon global release.</p>
+</div>
+<div class="row">
+    <div class="col-md-3">
+        <div class="card mb-3">
+            <button class="btn btn-link p-0" data-bs-toggle="modal" data-bs-target="#paymentModal">
+                <div class="card-body text-center">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" alt="Visa" style="height: 40px;">
+                    <p class="mt-2">Visa</p>
+                </div>
+            </button>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card mb-3">
+            <button class="btn btn-link p-0" data-bs-toggle="modal" data-bs-target="#paymentModal">
+                <div class="card-body text-center">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="MasterCard" style="height: 40px;">
+                    <p class="mt-2">MasterCard</p>
+                </div>
+            </button>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card mb-3">
+            <button class="btn btn-link p-0" data-bs-toggle="modal" data-bs-target="#paymentModal">
+                <div class="card-body text-center">
+                    <img src="/media/products/BKash-bKash-Logo.wine.png" alt="bKash" style="height: 40px;">
+                    <p class="mt-2">bKash</p>
+                </div>
+            </button>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card mb-3">
+            <button class="btn btn-link p-0" data-bs-toggle="modal" data-bs-target="#paymentModal">
+                <div class="card-body text-center">
+                    <img src="/media/products/512x512bb.jpg" alt="Nagad" style="height: 40px;">
+                    <p class="mt-2">Nagad</p>
+                </div>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Payment Gateway Modal -->
+<div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="paymentModalLabel">Payment Gateway Status</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Payment gateway is under processing. Full functionality will be available upon global release.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<form action="{% url 'place_order' %}" method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-primary">Confirm Order</button>
+    <a href="{% url 'cart_detail' %}" class="btn btn-secondary">Back to Cart</a>
+</form>
+{% endblock %}
