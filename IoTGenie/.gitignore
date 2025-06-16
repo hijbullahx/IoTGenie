@@ -1,9 +1,5 @@
-venv/
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-.Python
-*.sqlite3
-staticfiles/
 db.sqlite3
+debug.log
+__pycache__
+*.pyc
+.vercel/
