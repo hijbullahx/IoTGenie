@@ -8,7 +8,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'prDWK99ajI0JU7iy6QACCqR1nLGjyVneOs-i5
 
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.vercel.app', 'iotgenie.vercel.app']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.vercel.app', 'iotgenie.vercel.app', os.environ.get('RENDER_EXTERNAL_HOSTNAME')]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
