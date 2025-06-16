@@ -1,5 +1,7 @@
-db.sqlite3
-debug.log
-__pycache__
-*.pyc
-.vercel/
+echo db.sqlite3 > D:\Projects\IoTGenie\.gitignore
+echo debug.log >> D:\Projects\IoTGenie\.gitignore
+echo __pycache__/ >> D:\Projects\IoTGenie\.gitignore
+echo *.pyc >> D:\Projects\IoTGenie\.gitignore
+echo .vercel/ >> D:\Projects\IoTGenie\.gitignore
+echo vercel.json >> D:\Projects\IoTGenie\.gitignore
+echo venv/ >> D:\Projects\IoTGenie\.gitignore
