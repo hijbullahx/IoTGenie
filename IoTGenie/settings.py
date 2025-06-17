@@ -22,6 +22,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'shop',
+    'cloudinary_storage',
+    'cloudinary',
 ]
 
 MIDDLEWARE = [
@@ -97,3 +99,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = '/products/'
 LOGOUT_REDIRECT_URL = '/products/'
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': 'ds7xrsz2a',
+    'API_KEY': '635513161238999',
+    'API_SECRET': '87F9xim311QOJimykTj69OZ6SYU',
+}
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
