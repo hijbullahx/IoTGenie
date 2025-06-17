@@ -1,6 +1,5 @@
 import os
 from pathlib import Path
-import dj_database_url
 
 # Build paths
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -8,7 +7,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Security settings
 SECRET_KEY = os.environ.get("SECRET_KEY", "sEkCgX4dsuX9fH3aXPmgGkTvYDThQMe_9HYiJ1fEZ50L7-qS7K2HnLq0HnHkfIkzQuc")
 DEBUG = os.environ.get("DEBUG", "False") == "True"
-ALLOWED_HOSTS = [".onrender.com", "localhost", "127.0.0.1", ".vercel.app"]
+ALLOWED_HOSTS = [".onrender.com", "localhost", "127.0.0.1", ".vercel.app", ".herokuapp.com"]
 
 # Application definition
 INSTALLED_APPS = [
@@ -94,5 +93,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = '/products/'
 LOGOUT_REDIRECT_URL = '/products/'
-
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 #CLOUDINARY_URL = "cloudinary://376353617725859:idyqlHkBktsQFzADQ7GaYxvV-B8@ds7xrsz2a"
