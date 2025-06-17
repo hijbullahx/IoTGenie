@@ -5,3 +5,4 @@ echo *.pyc >> D:\Projects\IoTGenie\.gitignore
 echo .vercel/ >> D:\Projects\IoTGenie\.gitignore
 echo vercel.json >> D:\Projects\IoTGenie\.gitignore
 echo venv/ >> D:\Projects\IoTGenie\.gitignore
+.vercel
