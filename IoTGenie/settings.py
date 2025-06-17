@@ -22,8 +22,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'shop',
-    'cloudinary_storage',
-    'cloudinary',
 ]
 
 MIDDLEWARE = [
@@ -59,11 +57,7 @@ WSGI_APPLICATION = 'IoTGenie.wsgi.application'
 
 # Database configuration
 DATABASES = {
-    'default': dj_database_url.config(
-        default=os.environ.get('DATABASE_URL'),
-        conn_max_age=600,
-        ssl_require=True
-    )
+    'default': dj_database_url.config(default='postgresql://iotgenie-db_owner:npg_8CHoU3mJkgVe@ep-curly-base-a8ns257x-pooler.eastus2.azure.neon.tech/iotgenie-db?sslmode=require')
 }
 
 # Password validation
@@ -99,9 +93,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = '/products/'
 LOGOUT_REDIRECT_URL = '/products/'
-CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': 'ds7xrsz2a',
-    'API_KEY': '635513161238999',
-    'API_SECRET': '87F9xim311QOJimykTj69OZ6SYU',
-}
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+#CLOUDINARY_URL = "cloudinary://376353617725859:idyqlHkBktsQFzADQ7GaYxvV-B8@ds7xrsz2a"
