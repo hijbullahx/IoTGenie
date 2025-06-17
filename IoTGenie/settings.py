@@ -8,7 +8,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Security settings
 SECRET_KEY = os.environ.get("SECRET_KEY", "sEkCgX4dsuX9fH3aXPmgGkTvYDThQMe_9HYiJ1fEZ50L7-qS7K2HnLq0HnHkfIkzQuc")
 DEBUG = os.environ.get("DEBUG", "False") == "True"
-ALLOWED_HOSTS = [".onrender.com", "localhost", "127.0.0.1"]
+ALLOWED_HOSTS = [".onrender.com", "localhost", "127.0.0.1", ".vercel.app"]
 
 # Application definition
 INSTALLED_APPS = [
@@ -56,8 +56,9 @@ TEMPLATES = [
 WSGI_APPLICATION = 'IoTGenie.wsgi.application'
 
 # Database configuration
+import dj_database_url
 DATABASES = {
-    'default': dj_database_url.config(default='postgresql://iotgenie-db_owner:npg_8CHoU3mJkgVe@ep-curly-base-a8ns257x-pooler.eastus2.azure.neon.tech/iotgenie-db?sslmode=require')
+    'default': dj_database_url.config(conn_max_age=600, default='sqlite:///db.sqlite3')
 }
 
 # Password validation
@@ -93,6 +94,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = '/products/'
 LOGOUT_REDIRECT_URL = '/products/'
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
 #CLOUDINARY_URL = "cloudinary://376353617725859:idyqlHkBktsQFzADQ7GaYxvV-B8@ds7xrsz2a"

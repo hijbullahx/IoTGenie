@@ -1,0 +1,14 @@
+{
+  "builds": [
+    {
+      "src": "IoTGenie/wsgi.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "IoTGenie/wsgi.py"
+    }
+  ]
+}
