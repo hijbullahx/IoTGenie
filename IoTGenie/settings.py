@@ -31,9 +31,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.staticfiles.middleware.StaticFilesMiddleware',
-
 ]
 
 ROOT_URLCONF = 'IoTGenie.urls'
