@@ -5,9 +5,9 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Security settings
-SECRET_KEY = os.environ.get("SECRET_KEY", "sEkCgX4dsuX9fH3aXPmgGkTvYDThQMe_9HYiJ1fEZ50L7-qS7K2HnLq0HnHkfIkzQuc")
-DEBUG = os.environ.get("DEBUG", "False") == "True"
-ALLOWED_HOSTS = [".onrender.com", "localhost", "127.0.0.1", ".vercel.app", ".herokuapp.com"]
+SECRET_KEY = "sEkCgX4dsuX9fH3aXPmgGkTvYDThQMe_9HYiJ1fEZ50L7-qS7K2HnLq0HnHkfIkzQuc"
+DEBUG = True  # Temporary for debugging
+ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 
 # Application definition
 INSTALLED_APPS = [
@@ -17,7 +17,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'whitenoise.runserver_nostatic',
     'rest_framework',
     'rest_framework_simplejwt',
     'shop',
@@ -25,7 +24,6 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -54,10 +52,12 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'IoTGenie.wsgi.application'
 
-# Database configuration
-import dj_database_url
+# Database
 DATABASES = {
-    'default': dj_database_url.config(conn_max_age=600, default='sqlite:///db.sqlite3')
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
 }
 
 # Password validation
@@ -67,11 +67,14 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
+
+# REST Framework
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
 }
+
 # Internationalization
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
@@ -82,7 +85,6 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Media files
 MEDIA_URL = '/media/'
@@ -93,5 +95,3 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = '/products/'
 LOGOUT_REDIRECT_URL = '/products/'
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-#CLOUDINARY_URL = "cloudinary://376353617725859:idyqlHkBktsQFzADQ7GaYxvV-B8@ds7xrsz2a"
