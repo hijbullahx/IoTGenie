@@ -132,20 +132,7 @@
             shortcuts_span.appendChild(document.createTextNode('\u00A0|\u00A0'));
             shortcuts_span.appendChild(clock_link);
 
-            // Create clock link div
-            //
-            // Markup looks like:
-            // <div id="clockbox1" class="clockbox module">
-            //     <h2>Choose a time</h2>
-            //     <ul class="timelist">
-            //         <li><a href="#">Now</a></li>
-            //         <li><a href="#">Midnight</a></li>
-            //         <li><a href="#">6 a.m.</a></li>
-            //         <li><a href="#">Noon</a></li>
-            //         <li><a href="#">6 p.m.</a></li>
-            //     </ul>
-            //     <p class="calendar-cancel"><a href="#">Cancel</a></p>
-            // </div>
+    
 
             const clock_box = document.createElement('div');
             clock_box.style.display = 'none';
