@@ -12,8 +12,8 @@
             </div>
         </div>
         <div class="col-md-3">
-            <select name="category" class="form-select" onchange="this.form.submit()">
-                <option value="">All Categories</option>
+            <select name="category" class="form-select" id="category-select">
+                <option value="" {% if not category_filter %}selected{% endif %} style="font-weight:bold; background:#e9ecef; color:#007bff;">All Categories</option>
                 {% for category in categories %}
                 <option value="{{ category }}" {% if category == category_filter %}selected{% endif %}>{{ category }}</option>
                 {% endfor %}
@@ -74,6 +74,13 @@
     document.addEventListener('click', function (e) {
         if (!searchInput.contains(e.target) && !suggestionsDropdown.contains(e.target)) {
             suggestionsDropdown.classList.remove('show');
+        }
+    });
+
+    // Make 'All Categories' act like a button
+    document.getElementById('category-select').addEventListener('change', function() {
+        if (this.value === '') {
+            this.form.submit();
         }
     });
 </script>
