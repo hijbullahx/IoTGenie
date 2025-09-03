@@ -43,8 +43,8 @@ def product_list(request):
     return render(request, 'product_list.html', {
         'products': products,
         'categories': categories,
-        'search_query': '',
-        'category_filter': ''
+        'search_query': search_query,
+        'category_filter': category_filter
     })
 
 def product_detail(request, product_id):
