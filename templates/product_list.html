@@ -1,41 +1,49 @@
 {% extends 'base.html' %}
 {% block title %}Products{% endblock %}
 {% block content %}
-<h1 class="my-4">IoT Products</h1>
+<h1 style="font-size:2rem; font-weight:700; margin: 24px 0 16px 0; color:#232f3e;">IoT Products</h1>
 <form method="get" class="mb-4" id="search-form">
-    <div class="row">
-        <div class="col-md-6">
-            <div class="input-group">
-                <input type="text" name="search" id="search-input" class="form-control" placeholder="Search products..." value="{{ search_query }}" autocomplete="off">
-                <button type="submit" class="btn btn-primary">Search</button>
-                <div class="dropdown-menu" id="suggestions" style="width: 100%;"></div>
-            </div>
+    <div style="display:flex; gap:16px; align-items:center; flex-wrap:wrap;">
+        <div style="flex:1; min-width:260px;">
+            <input type="text" name="search" id="search-input" class="form-control" placeholder="Search products..." value="{{ search_query }}" autocomplete="off" style="border-radius:4px; border:1px solid #ddd; padding:8px 12px; font-size:1rem; width:100%;">
         </div>
-        <div class="col-md-3">
-            <select name="category" class="form-select" id="category-select" onchange="this.form.submit()">
+        <div style="min-width:180px;">
+            <select name="category" class="form-select" id="category-select" onchange="this.form.submit()" style="border-radius:4px; border:1px solid #ddd;">
                 <option value="" {% if not category_filter %}selected{% endif %}>All Categories</option>
                 {% for category in categories %}
                 <option value="{{ category }}" {% if category == category_filter %}selected{% endif %}>{{ category }}</option>
                 {% endfor %}
             </select>
         </div>
+        <button type="submit" style="background:#febd69; color:#111; font-weight:700; border:none; border-radius:4px; padding:8px 24px; font-size:1rem; margin-left:8px;">Search</button>
     </div>
+    <div class="dropdown-menu" id="suggestions" style="width: 100%;"></div>
 </form>
 
-<div class="row">
+<div style="display:flex; flex-wrap:wrap; gap:24px; justify-content:flex-start;">
     {% for product in products %}
-    <div class="col-md-4 mb-4">
-        <div class="card h-100">
-            {% if product.image %}
-            <img src="{{ product.image.url }}" class="card-img-top product-img" alt="{{ product.name }}">
-            {% endif %}
-            <div class="card-body">
-                <h5 class="card-title">{{ product.name }}</h5>
-                <p class="card-text">{{ product.description|truncatewords:20 }}</p>
-                <p class="card-text"><strong>Price:</strong> BDT {{ product.price }}</p>
-                <p class="card-text"><strong>Category:</strong> {{ product.category }}</p>
-                <a href="{% url 'product_detail' product.id %}" class="btn btn-primary">View Details</a>
+    <div style="background:#fff; border:1px solid #e3e6e6; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.06); width:300px; margin-bottom:24px; display:flex; flex-direction:column;">
+        {% if product.image %}
+        <div style="background:#fafafa; border-bottom:1px solid #eee; display:flex; align-items:center; justify-content:center; height:220px;">
+            <img src="{{ product.image.url }}" alt="{{ product.name }}" style="max-height:180px; max-width:90%; object-fit:contain; margin:auto;">
+        </div>
+        {% endif %}
+        <div style="padding:16px; flex:1; display:flex; flex-direction:column; justify-content:space-between;">
+            <h5 style="font-size:1.1rem; font-weight:700; color:#0f1111; margin-bottom:8px; min-height:2.5em;">{{ product.name }}</h5>
+            <p style="font-size:0.97rem; color:#555; margin-bottom:8px; min-height:3em;">{{ product.description|truncatewords:20 }}</p>
+            <div style="margin-bottom:8px;">
+                <span style="font-size:1.3rem; font-weight:700; color:#B12704;">BDT {{ product.price }}</span>
             </div>
+            <div style="font-size:0.95rem; color:#555; margin-bottom:8px;">
+                <strong>Category:</strong> {{ product.category }}
+            </div>
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
+                <span style="color:#ffa41c; font-size:1.1rem;">
+                    <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-half-alt"></i>
+                </span>
+                <span style="font-size:0.95rem; color:#888;">Views: {{ product.view_count|default:0 }}</span>
+            </div>
+            <a href="{% url 'product_detail' product.id %}" style="background:#febd69; color:#111; font-weight:700; border:none; border-radius:4px; padding:10px 0; text-align:center; text-decoration:none; font-size:1.05rem; display:block; margin-top:auto; transition:background 0.2s;">View Details</a>
         </div>
     </div>
     {% empty %}
