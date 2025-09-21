@@ -118,26 +118,11 @@
             text-align: center;
             font-size: 0.95rem;
         }
-        .about-btn {
-            background: none;
-            border: none;
-            color: #ffb84d;
-            font-size: 1.5rem;
-            margin-right: 16px;
-            cursor: pointer;
-            transition: color 0.2s;
-        }
-        .about-btn:hover {
-            color: #fff;
-        }
     </style>
 </head>
 <body>
     <header class="amazon-header">
         <div class="container">
-            <button class="about-btn" data-bs-toggle="modal" data-bs-target="#aboutModal" title="About Developer">
-                <i class="fa fa-info-circle"></i>
-            </button>
             <a class="amazon-logo" href="{% url 'product_list' %}">IoTGenie</a>
             <form method="get" action="{% url 'product_list' %}" class="amazon-search" id="search-form">
                 <input type="text" name="search" id="search-input" placeholder="Search products..." value="{{ search_query }}" autocomplete="off">
@@ -170,20 +155,5 @@
     <footer>
         <!-- Footer intentionally left blank -->
     </footer>
-    <!-- About Me Modal -->
-    <div class="modal fade" id="aboutModal" tabindex="-1" aria-labelledby="aboutModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="aboutModalLabel">About the Developer</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p><strong>IoTGenie</strong> is developed by Hijbullah X. For more information, contact: <a href="mailto:your.email@example.com">your.email@example.com</a></p>
-                    <p>This project is a demonstration of a Django-based IoT e-commerce platform, inspired by Amazon's UI for educational purposes.</p>
-                </div>
-            </div>
-        </div>
-    </div>
 </body>
 </html>
