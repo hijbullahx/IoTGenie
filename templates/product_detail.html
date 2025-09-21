@@ -1,29 +1,40 @@
 {% extends 'base.html' %}
 {% block title %}{{ product.name }}{% endblock %}
 {% block content %}
-<div class="row my-4">
-    <div class="col-md-4">
+<div style="display:flex; flex-wrap:wrap; gap:32px; margin:32px 0; align-items:flex-start;">
+    <div style="flex:1 1 350px; max-width:480px; background:#fff; border:1px solid #e3e6e6; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.06); padding:32px 24px; display:flex; align-items:center; justify-content:center; min-height:420px;">
         {% if product.image %}
-        <img src="{{ product.image.url }}" class="product-img img-fluid" alt="{{ product.name }}">
+        <img src="{{ product.image.url }}" alt="{{ product.name }}" style="max-width:100%; max-height:340px; object-fit:contain;">
         {% endif %}
     </div>
-    <div class="col-md-8">
-        <h1>{{ product.name }}</h1>
-        <p>{{ product.description }}</p>
-        <p><strong>Price:</strong> BDT {{ product.price }}</p>
-        <p><strong>Category:</strong> {{ product.category }}</p>
-        <p><strong>Popularity:</strong> Viewed {{ product.view_count }} times</p>
-        {% if user.is_authenticated %}
-        <form action="{% url 'add_to_cart' product.id %}" method="post" class="d-inline">
-            {% csrf_token %}
-            <div class="input-group mb-3" style="max-width: 200px;">
-                <input type="number" name="quantity" value="1" min="1" class="form-control">
-                <button type="submit" class="btn btn-primary">Add to Cart</button>
-            </div>
-        </form>
-        {% else %}
-        <p>Please <a href="{% url 'login' %}">login</a> to add items to your cart.</p>
-        {% endif %}
+    <div style="flex:2 1 400px; min-width:320px;">
+        <h1 style="font-size:2rem; font-weight:700; color:#0f1111; margin-bottom:12px;">{{ product.name }}</h1>
+        <div style="margin-bottom:16px; color:#555; font-size:1.1rem;">{{ product.description }}</div>
+        <div style="margin-bottom:12px; font-size:1.15rem; color:#555;">
+            <strong>Category:</strong> {{ product.category }}
+        </div>
+        <div style="margin-bottom:18px; display:flex; align-items:center; gap:12px;">
+            <span style="color:#ffa41c; font-size:1.2rem;">
+                <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-half-alt"></i>
+            </span>
+            <span style="font-size:1rem; color:#888;">Viewed {{ product.view_count|default:0 }} times</span>
+        </div>
+        <div style="margin-bottom:24px;">
+            <span style="font-size:2rem; font-weight:700; color:#B12704;">BDT {{ product.price }}</span>
+        </div>
+        <div style="background:#f3f3f3; border:1px solid #e3e6e6; border-radius:8px; box-shadow:0 1px 4px rgba(0,0,0,0.04); padding:24px 20px; max-width:320px;">
+            {% if user.is_authenticated %}
+            <form action="{% url 'add_to_cart' product.id %}" method="post" style="margin-bottom:0;">
+                {% csrf_token %}
+                <div style="display:flex; align-items:center; gap:8px; margin-bottom:16px;">
+                    <input type="number" name="quantity" value="1" min="1" style="width:60px; border-radius:4px; border:1px solid #ddd; padding:6px 8px;">
+                </div>
+                <button type="submit" style="width:100%; background:#febd69; color:#111; font-weight:700; border:none; border-radius:4px; padding:12px 0; font-size:1.1rem; margin-bottom:8px; transition:background 0.2s;">Add to Cart</button>
+            </form>
+            {% else %}
+            <p style="margin-bottom:0;">Please <a href="{% url 'login' %}" style="color:#007185; text-decoration:underline;">login</a> to add items to your cart.</p>
+            {% endif %}
+        </div>
     </div>
 </div>
 {% endblock %}
