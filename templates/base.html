@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IoTGenie - {% block title %}{% endblock %}</title>
     <link rel="icon" href="data:;base64,=">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
     <link href="{% static 'css/sketchy-bootstrap.min.css' %}" rel="stylesheet">
     <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
     <style>
@@ -14,112 +15,145 @@
             display: flex;
             flex-direction: column;
             min-height: 100vh;
+            font-family: 'Arial', 'Helvetica Neue', Helvetica, sans-serif;
+            background: #fff;
         }
-        .product-img { max-height: 200px; object-fit: cover; }
+        .amazon-header {
+            background: #131921;
+            color: #fff;
+            padding: 0;
+            min-height: 60px;
+            width: 100%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+        }
+        .amazon-header .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 16px;
+        }
+        .amazon-logo {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ff9900;
+            text-decoration: none;
+            letter-spacing: -1px;
+        }
+        .amazon-search {
+            flex: 1;
+            margin: 0 24px;
+            display: flex;
+            align-items: center;
+        }
+        .amazon-search input[type="text"] {
+            border-radius: 4px 0 0 4px;
+            border: none;
+            padding: 8px 12px;
+            width: 350px;
+            font-size: 1rem;
+            outline: none;
+        }
+        .amazon-search button {
+            border-radius: 0 4px 4px 0;
+            background: #febd69;
+            border: none;
+            color: #111;
+            font-weight: bold;
+            padding: 8px 18px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .amazon-search button:hover {
+            background: #f3a847;
+        }
+        .amazon-nav {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+        .amazon-nav a, .amazon-nav button.nav-link {
+            color: #fff;
+            font-size: 0.95rem;
+            text-decoration: none;
+            background: none;
+            border: none;
+            padding: 0 8px;
+            transition: color 0.2s;
+        }
+        .amazon-nav a:hover, .amazon-nav button.nav-link:hover {
+            color: #febd69;
+        }
+        .amazon-cart {
+            display: flex;
+            align-items: center;
+            color: #fff;
+            font-size: 1.1rem;
+            text-decoration: none;
+            position: relative;
+        }
+        .amazon-cart .fa-shopping-cart {
+            font-size: 1.4rem;
+            margin-right: 4px;
+        }
+        .amazon-cart-count {
+            position: absolute;
+            top: -6px;
+            right: -10px;
+            background: #febd69;
+            color: #111;
+            border-radius: 50%;
+            font-size: 0.8rem;
+            padding: 2px 6px;
+            font-weight: bold;
+        }
+        .container { flex: 1 0 auto; max-width: 1200px; margin: 0 auto; padding: 24px 16px 0 16px; }
         footer {
             margin-top: auto;
-            padding: 1rem 0;
-            background-color: #f8f9fa;
-            text-align: right;
+            padding: 1.5rem 0 1rem 0;
+            background-color: #232f3e;
+            color: #fff;
+            text-align: center;
+            font-size: 0.95rem;
         }
-        .container { flex: 1 0 auto; }
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+    <header class="amazon-header">
         <div class="container">
-            <button class="btn btn-link text-light me-2" data-bs-toggle="modal" data-bs-target="#aboutModal" title="About Developer">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16">
-                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                    <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
-                </svg>
-            </button>
-            <a class="navbar-brand" href="{% url 'product_list' %}">IoTGenie</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'product_list' %}">Products</a>
-                    </li>
-                    {% if user.is_authenticated %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'cart_detail' %}">Cart</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'order_list' %}">Orders</a>
-                    </li>
-                    <li class="nav-item">
-                        <form action="{% url 'logout' %}" method="post" class="d-inline">
-                            {% csrf_token %}
-                            <button type="submit" class="nav-link btn btn-link text-light p-0">Logout</button>
-                        </form>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'profile' %}" title="Profile">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
-                                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
-                                <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
-                            </svg>
-                        </a>
-                    </li>
-                    {% else %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'login' %}">Login</a>
-                    </li>
-                    {% endif %}
-                </ul>
-            </div>
+            <a class="amazon-logo" href="{% url 'product_list' %}">IoTGenie</a>
+            <form method="get" action="{% url 'product_list' %}" class="amazon-search" id="search-form">
+                <input type="text" name="search" id="search-input" placeholder="Search products..." value="{{ search_query }}" autocomplete="off">
+                <button type="submit"><i class="fa fa-search"></i></button>
+            </form>
+            <nav class="amazon-nav">
+                <a href="{% url 'product_list' %}">Products</a>
+                {% if user.is_authenticated %}
+                <a href="{% url 'order_list' %}">Returns & Orders</a>
+                <a href="{% url 'cart_detail' %}" class="amazon-cart" title="Cart">
+                    <i class="fa fa-shopping-cart"></i>
+                    Cart
+                </a>
+                <form action="{% url 'logout' %}" method="post" class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="nav-link">Logout</button>
+                </form>
+                <a href="{% url 'profile' %}" title="Profile">
+                    <i class="fa fa-user-circle"></i>
+                </a>
+                {% else %}
+                <a href="{% url 'login' %}">Sign In</a>
+                {% endif %}
+            </nav>
         </div>
-    </nav>
-
-    <!-- About Me Modal -->
-    <div class="modal fade" id="aboutModal" tabindex="-1" aria-labelledby="aboutModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="aboutModalLabel">About the Developer</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <h4>👨‍💻 About Me</h4>
-                    <p>Hi, I’m Hijbullah, a passionate tech enthusiast from Bangladesh with a deep curiosity for IoT, Artificial Intelligence, Machine Learning, and Robotics. I’m currently pursuing my Bachelor’s in Computer Science and Engineering and actively involved in research, innovation, and real-world tech projects.</p>
-                    <p>Over the past few years, I’ve dedicated myself to exploring how intelligent systems can solve local and global problems. My journey has led me to create <strong>IoTGenie</strong> — a platform that merges cutting-edge IoT technology with user-friendly experiences to help individuals and businesses thrive in a connected world.</p>
-                    <h5>🛠️ What I Do:</h5>
-                    <ul>
-                        <li>Build smart IoT solutions that improve everyday life</li>
-                        <li>Conduct research in ML, AI, power distribution, and security in IoT systems</li>
-                        <li>Develop web and mobile interfaces to connect users with intelligent tech</li>
-                        <li>Collaborate with like-minded innovators to bring big ideas to life</li>
-                    </ul>
-                    <h5>🎓 A Bit More About Me:</h5>
-                    <ul>
-                        <li>Campus Ambassador of ICTOB, IIEC member, and former Rover Scout</li>
-                        <li>Winner of Grameenphone Academy IoT Competition (2nd Place)</li>
-                        <li>Contributor to multiple ongoing research projects including power optimization, IoT botnet detection, and adversarial machine learning</li>
-                    </ul>
-                    <p>I believe that technology should not only be smart — it should be kind, inclusive, and impactful.</p>
-                    <h5>🌱 My Vision:</h5>
-                    <p>To make Bangladesh a smarter, more connected nation through scalable IoT solutions backed by AI. My dream is to build systems that recognize us, understand us, and help us — much like a digital companion.</p>
-                    <p>Thank you for visiting IoTGenie. Let’s innovate, together.</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="container">
-        {% block content %}
-        {% endblock %}
-    </div>
-
+    </header>
+    <main class="container">
+        {% block content %}{% endblock %}
+    </main>
     <footer>
-        <div class="container">
-            <p class="mb-0 text-end">&copy; 2025 Md. Taher Bin Omar Hijbullah</p>
-        </div>
+        &copy; {{ now|date:'Y' }} IoTGenie &mdash; Inspired by Amazon.com UI. All rights reserved.
     </footer>
 </body>
 </html>
